@@ -74,7 +74,7 @@
     <div class="container">
         <h1>疾病药物对应</h1>
         <div class="input-group">
-            <input type="text" id="diseaseInput" placeholder="请输入疾病名称">
+            <input type="text" id="diseaseInput" placeholder="请输入疾病名称（不包括外科疾病）">
             <button onclick="searchDisease()">搜索</button>
         </div>
         <div class="result" id="resultDiv"></div>
@@ -83,10 +83,29 @@
     <script>
         // 药物数据，格式为 {疾病: [药物1, 药物2, ...]}
         const diseaseDrugMap = {
+           "心脏病": ["阿司匹林", "硝酸钠"],
             "高血压": ["氮曲明", "洛斯artan", "乙酸呃肇"],
-            "糖尿病": ["甲硝唑", "二甲双胍", "内酯"]
+            "糖尿病": ["甲硝唑", "二甲双胍", "内酯"],
+            "肿瘤": ["辛普坦", "吉西他滨"],
+            "哮喘": ["布吡可比", "特洛文"],
+            "强直性疼痛症": ["甲氨喹", "萘普生"],
+            "抑郁症": ["氟伏米嗪", "帕罗西汀"],
+            "焦虑症": ["艾司氮胺", "阿尔普拉洛"],
+            "甲状腺功能减退": ["琼脂素", "萘甲硫酸"],
+            "偏瘫": ["丙戊酸钠", "托吡酯"],
+            "动脉硬化": ["阿司匹林", "辛伐他汀"],
+            "慢性阻塞性肺疾病": ["氧疗", "特洛文"],
+            "结核病": ["异丙嗪", "乙酸胺"],
+            "湿疹": ["醋酸酚", "氢化可的松"],
+            "胃炎": ["omeprazole", "lansoprazole"],
+            "胃癌": ["氟尿索嘧啶", "顺铂"],
+            "乳腺癌": ["多西他赛","doxorubicin", "化疗药物"],
+            "皮肤癌":["5 - FU", "卡莫定"],
+            "直径型红斑狼疮": ["氢化可的松", "糖皮质激素"],
+            "痛风症":["非布司他", "阿洛吡酚"],
+            "结核病":["异丙嗪", "乙酸胺"],
             // 可以继续添加其他疾病和药物对应关系
-        };
+        }
 
         function searchDisease() {
             const diseaseInput = document.getElementById('diseaseInput');
@@ -95,7 +114,7 @@
             if (!diseaseText) return;
 
             const resultDiv = document.getElementById('resultDiv');
-            resultDiv.innerHTML = '<div class="no-result">无相关数据</div>';
+            resultDiv.innerHTML = '<div class="no-result">无相关数据，可能是名称不规范所致</div>';
 
             // 提取疾病名称，获取对应的药物列表
             let drugList = diseaseDrugMap[diseaseText] || [];
