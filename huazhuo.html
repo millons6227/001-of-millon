@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水循环主要环节模拟实验</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: linear-gradient(135deg, #e6f2f9 0%, #d0e4f2 100%); min-height: 100vh; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; padding: 20px; }
+.max-w-6xl { max-width: 1200px; margin: 0 auto; }
+.text-center { text-align: center; }
+.text-3xl { font-size: 28px; }
+.font-medium { font-weight: 500; }
+.text-[#1a3b4f] { color: #1a3b4f; }
+.mb-4 { margin-bottom: 16px; }
+.tracking-wider { letter-spacing: 3px; }
+.bg-white\/70 { background: rgba(255, 255, 255, 0.7); }
+.backdrop-blur-sm { backdrop-filter: blur(6px); }
+.rounded-3xl { border-radius: 24px; }
+.shadow-xl { box-shadow: 0 20px 40px rgba(0, 20, 40, 0.2); }
+.p-6 { padding: 24px; }
+.border { border: 1px solid rgba(255, 255, 255, 0.6); }
+.border-white\/60 { border-color: rgba(255, 255, 255, 0.6); }
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: 1fr; }
+.lg\:grid-cols-4 { grid-template-columns: 1fr; }
+.gap-6 { gap: 24px; }
+.lg\:col-span-3 { grid-column: span 1; }
+.relative { position: relative; }
+.bg-[#d5e7f2] { background: #d5e7f2; }
+.rounded-2xl { border-radius: 16px; }
+.shadow-inner { box-shadow: inset 0 6px 12px rgba(0,0,0,0.06); }
+.p-3 { padding: 12px; }
+.w-full { width: 100%; }
+.rounded-xl { border-radius: 12px; }
+.bg-[#e8f1f8] { background: #e8f1f8; }
+.absolute { position: absolute; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.pointer-events-none { pointer-events: none; }
+.overflow-hidden { overflow: hidden; }
+.mt-3 { margin-top: 12px; }
+.text-[#2c5f7a] { color: #2c5f7a; }
+.bg-[#eaf4fb] { background: #eaf4fb; }
+.py-2 { padding-top: 8px; padding-bottom: 8px; }
+.px-4 { padding-left: 16px; padding-right: 16px; }
+.lg\:col-span-1 { grid-column: span 1; }
+.space-y-4 > * + * { margin-top: 16px; }
+.bg-white\/80 { background: rgba(255, 255, 255, 0.8); }
+.shadow-md { box-shadow: 0 4px 10px rgba(0, 20, 30, 0.08); }
+.text-lg { font-size: 18px; }
+.text-[#1a465c] { color: #1a465c; }
+.mb-3 { margin-bottom: 12px; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-2 { gap: 8px; }
+.w-6 { width: 24px; }
+.h-6 { height: 24px; }
+.rounded-full { border-radius: 9999px; }
+.bg-[#2b7f9e] { background: #2b7f9e; }
+.text-white { color: #fff; }
+.text-sm { font-size: 14px; }
+.space-y-2 > * + * { margin-top: 8px; }
+.step-btn { transition: all 0.2s; width: 100%; padding: 8px 16px; border-radius: 12px; background: #fff; border: 1px solid #c9e0f0; color: #1a465c; text-align: left; cursor: pointer; }
+.step-btn:hover:not(:disabled) { background: #eaf4fb; border-color: #2b7f9e; }
+.step-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.step-btn.bg-\[#e3f0f7\] { background: #e3f0f7; border-color: #2b7f9e; }
+.flex-1 { flex: 1; }
+.mt-3 { margin-top: 12px; }
+.gap-2 { gap: 8px; }
+.hover\:bg-\[#236d88\]:hover { background: #236d88; }
+.hover\:bg-\[#eaf4fb\]:hover { background: #eaf4fb; }
+.transition { transition: all 0.15s; }
+.slider-container { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 24px; box-shadow: 0 2px 8px rgba(0, 30, 60, 0.08); }
+input[type="range"] { -webkit-appearance: none; width: 120px; height: 6px; border-radius: 3px; background: #c9e0f0; outline: none; flex-shrink: 1; min-width: 60px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #2b7f9e; cursor: pointer; box-shadow: 0 2px 6px rgba(43, 127, 158, 0.4); }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #2b7f9e; cursor: pointer; border: none; }
+.whitespace-nowrap { white-space: nowrap; }
+.text-xs { font-size: 12px; }
+.text-[#5a8ba0] { color: #5a8ba0; }
+.leading-relaxed { line-height: 1.625; }
+.mt-4 { margin-top: 16px; }
+.flex-wrap { flex-wrap: wrap; }
+.justify-center { justify-content: center; }
+.gap-6 { gap: 24px; }
+.w-5 { width: 20px; }
+.h-1\.5 { height: 6px; }
+.bg-\[\#ff7d29\] { background: #ff7d29; }
+.bg-\[\#8dc6e8\] { background: #8dc6e8; }
+.border-\[\#4f8ba0\] { border-color: #4f8ba0; }
+.rounded { border-radius: 4px; }
+.label-tag { position: absolute; background: rgba(255,255,255,0.95); padding: 4px 10px; border-radius: 12px; font-size: 14px; color: #1a465c; box-shadow: 0 2px 8px rgba(0,0,0,0.1); pointer-events: none; white-space: nowrap; border-left: 3px solid #2b7f9e; z-index: 10; }
+@media (min-width: 1024px) {
+.lg\:grid-cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.lg\:col-span-3 { grid-column: span 3; }
+.lg\:col-span-1 { grid-column: span 1; }
+}
+@media (max-width: 768px) {
+.text-3xl { font-size: 22px; }
+.p-6 { padding: 16px; }
+.slider-container { flex-wrap: wrap; justify-content: center; }
+input[type="range"] { width: 80px; }
+}
+</style>
+</head>
+<body>
+<div class="max-w-6xl mx-auto">
+<h1 class="text-center text-3xl font-medium text-[#1a3b4f] mb-4 tracking-wider">水循环主要环节模拟实验</h1>
+<div class="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-white/60">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+<!-- 实验画布区域 -->
+<div class="lg:col-span-3 relative">
+<div class="bg-[#d5e7f2] rounded-2xl shadow-inner p-3 relative">
+<canvas id="expCanvas" width="800" height="480" class="w-full rounded-xl bg-[#e8f1f8]"></canvas>
+<div id="labelsContainer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+</div>
+<div id="statusTip" class="mt-3 text-center text-[#2c5f7a] bg-[#eaf4fb] py-2 px-4 rounded-xl">步骤4：观察到水蒸气冷却凝结成水滴，降落到托盘中</div>
+</div>
+<!-- 控制面板 -->
+<div class="lg:col-span-1 space-y-4">
+<!-- 实验步骤 -->
+<div class="bg-white/80 rounded-2xl p-4 shadow-md">
+<h3 class="text-lg font-medium text-[#1a465c] mb-3 flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#2b7f9e] text-white text-sm flex items-center justify-center">1</span>
+实验步骤
+</h3>
+<div class="space-y-2">
+<button id="step1Btn" class="step-btn bg-[#e3f0f7]">步骤1：连接装置，加入自来水</button>
+<button id="step2Btn" class="step-btn bg-[#e3f0f7]">步骤2：点燃酒精灯加热烧瓶</button>
+<button id="step3Btn" class="step-btn bg-[#e3f0f7]">步骤3：玻璃板上放置冰块</button>
+<button id="step4Btn" class="step-btn bg-[#e3f0f7]">步骤4：观察水滴形成降落</button>
+</div>
+<div class="flex gap-2 mt-3">
+<button id="autoBtn" class="flex-1 py-2 px-3 rounded-xl bg-[#2b7f9e] text-white transition hover:bg-[#236d88]">自动演示</button>
+<button id="resetBtn" class="flex-1 py-2 px-3 rounded-xl bg-white border border-[#c9e0f0] text-[#1a465c] hover:bg-[#eaf4fb] transition">重置实验</button>
+</div>
+</div>
+<!-- 变量调节 -->
+<div class="bg-white/80 rounded-2xl p-4 shadow-md">
+<h3 class="text-lg font-medium text-[#1a465c] mb-3 flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#2b7f9e] text-white text-sm flex items-center justify-center">2</span>
+变量调节（探究）
+</h3>
+<div class="space-y-4">
+<div class="slider-container w-full">
+<span class="text-sm text-[#1a465c] whitespace-nowrap">加热强度</span>
+<input type="range" id="heatSlider" min="1" max="3" value="2">
+<span id="heatValue" class="text-sm text-[#2b7f9e] font-medium">中</span>
+</div>
+<div class="slider-container w-full">
+<span class="text-sm text-[#1a465c] whitespace-nowrap">冰块数量</span>
+<input type="range" id="iceSlider" min="1" max="4" value="2">
+<span id="iceValue" class="text-sm text-[#2b7f9e] font-medium">2块</span>
+</div>
+<div class="bg-[#eaf4fb] rounded-xl p-3 text-sm text-[#2c5f7a]">
+<div class="flex justify-between mb-1">
+<span>托盘中水量：</span>
+<span id="waterLevel" class="font-medium">100%</span>
+</div>
+<div class="w-full h-3 bg-white rounded-full overflow-hidden">
+<div id="waterBar" class="h-full bg-[#5aaed6] transition-all duration-300" style="width: 100%;"></div>
+</div>
+</div>
+<div class="text-xs text-[#5a8ba0] leading-relaxed">
+💡 调节变量后观察：加热越强、冰块越多，降水速度越快，托盘水量增加越快
+</div>
+</div>
+</div>
+<!-- 原理标注 -->
+<div class="bg-white/80 rounded-2xl p-4 shadow-md">
+<h3 class="text-lg font-medium text-[#1a465c] mb-3 flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#2b7f9e] text-white text-sm flex items-center justify-center">3</span>
+原理标注
+</h3>
+<button id="labelBtn" class="w-full py-2 px-4 rounded-xl bg-white border border-[#c9e0f0] text-[#1a465c] hover:bg-[#eaf4fb] transition">显示水循环环节标注</button>
+<div id="linkTip" class="mt-3 text-xs text-[#5a8ba0] leading-relaxed">
+模拟实验对应自然界水循环环节：<br>
+烧瓶加热→蒸发<span class="mx-1">|</span>玻璃导管→水汽输送<br>
+冰块冷却→凝结<span class="mx-1">|</span>水滴下落→降水
+</div>
+</div>
+</div>
+</div>
+<!-- 图例 -->
+<div class="mt-4 flex flex-wrap justify-center gap-6 text-sm text-[#2c5f7a]">
+<span class="flex items-center gap-2"><i class="w-5 h-1.5 bg-[#ff7d29] rounded"></i> 加热</span>
+<span class="flex items-center gap-2"><i class="w-5 h-1.5 bg-[#8dc6e8] rounded"></i> 水汽（蒸发/输送）</span>
+<span class="flex items-center gap-2"><i class="w-5 h-1.5 bg-white border border-[#4f8ba0] rounded"></i> 凝结</span>
+<span class="flex items-center gap-2"><i class="w-5 h-1.5 bg-[#2b7f9e] rounded"></i> 降水</span>
+</div>
+</div>
+</div>
+<script>
+(function() {
+const canvas = document.getElementById('expCanvas');
+const ctx = canvas.getContext('2d');
+const W = 800, H = 480;
+
+// 状态变量
+let currentStep = 0;
+let isAutoPlaying = false;
+let showLabels = false;
+let isHeating = false;
+let hasIce = false;
+let heatLevel = 2;
+let iceCount = 2;
+let trayWater = 0;
+let steamParticles = [];
+let dripParticles = [];
+let flameParticles = [];
+let animId = null;
+let frame = 0;
+
+// 器材配置
+const config = {
+flask: { x: 480, y: 320, radius: 55 },
+iceCubes: []
+};
+
+// DOM元素
+const stepBtns = [
+document.getElementById('step1Btn'),
+document.getElementById('step2Btn'),
+document.getElementById('step3Btn'),
+document.getElementById('step4Btn')
+];
+const statusTip = document.getElementById('statusTip');
+const labelsContainer = document.getElementById('labelsContainer');
+
+// 更新冰块位置
+function updateIcePositions() {
+config.iceCubes = [];
+const startX = 160;
+const spacing = 280 / (iceCount + 1);
+for(let i=0; i<iceCount; i++) {
+config.iceCubes.push({x: startX + spacing*(i+1), y: 155, size: 25});
+}
+}
+
+// 绑定事件
+function bindEvents() {
+stepBtns[0].addEventListener('click', () => goToStep(1));
+stepBtns[1].addEventListener('click', () => goToStep(2));
+stepBtns[2].addEventListener('click', () => goToStep(3));
+stepBtns[3].addEventListener('click', () => goToStep(4));
+document.getElementById('autoBtn').addEventListener('click', autoPlay);
+document.getElementById('resetBtn').addEventListener('click', reset);
+
+const heatSlider = document.getElementById('heatSlider');
+const heatText = document.getElementById('heatValue');
+heatSlider.addEventListener('input', () => {
+heatLevel = parseInt(heatSlider.value);
+heatText.textContent = ['弱', '中', '强'][heatLevel-1];
+});
+
+const iceSlider = document.getElementById('iceSlider');
+const iceText = document.getElementById('iceValue');
+iceSlider.addEventListener('input', () => {
+iceCount = parseInt(iceSlider.value);
+iceText.textContent = iceCount + '块';
+updateIcePositions();
+});
+
+document.getElementById('labelBtn').addEventListener('click', toggleLabels);
+}
+
+// 步骤跳转
+function goToStep(step) {
+currentStep = step;
+updateStepButtons();
+switch(step) {
+case 1:
+statusTip.textContent = '步骤1：装置连接完成，烧瓶中已加入适量自来水';
+stepBtns[1].disabled = false;
+break;
+case 2:
+isHeating = true;
+statusTip.textContent = '步骤2：酒精灯点燃，正在加热烧瓶中的水';
+stepBtns[2].disabled = false;
+break;
+case 3:
+hasIce = true;
+statusTip.textContent = '步骤3：玻璃板上放置冰块，水蒸气遇冷凝结';
+stepBtns[3].disabled = false;
+break;
+case 4:
+statusTip.textContent = '步骤4：观察到水蒸气冷却凝结成水滴，降落到托盘中';
+break;
+}
+if(!animId) animate();
+}
+
+// 更新按钮状态
+function updateStepButtons() {
+stepBtns.forEach((btn, index) => {
+if(index < currentStep) {
+btn.classList.add('bg-[#e3f0f7]');
+btn.classList.remove('bg-white');
+} else {
+btn.classList.remove('bg-[#e3f0f7]');
+btn.classList.add('bg-white');
+}
+btn.disabled = index > currentStep;
+});
+}
+
+// 自动演示
+function autoPlay() {
+if(isAutoPlaying) return;
+isAutoPlaying = true;
+reset();
+let step = 1;
+const interval = setInterval(() => {
+if(step > 4) {
+clearInterval(interval);
+isAutoPlaying = false;
+return;
+}
+goToStep(step);
+step++;
+}, 2000);
+}
+
+// 重置
+function reset() {
+if(animId) cancelAnimationFrame(animId);
+animId = null;
+currentStep = 0;
+isHeating = false;
+hasIce = false;
+isAutoPlaying = false;
+steamParticles = [];
+dripParticles = [];
+flameParticles = [];
+trayWater = 0;
+document.getElementById('waterLevel').textContent = '0%';
+document.getElementById('waterBar').style.width = '0%';
+stepBtns.forEach(btn => {
+btn.classList.remove('bg-[#e3f0f7]');
+btn.classList.add('bg-white');
+btn.disabled = false;
+});
+stepBtns[1].disabled = true;
+stepBtns[2].disabled = true;
+stepBtns[3].disabled = true;
+statusTip.textContent = '实验准备：请按步骤开始实验操作';
+labelsContainer.innerHTML = '';
+showLabels = false;
+document.getElementById('labelBtn').textContent = '显示水循环环节标注';
+draw();
+}
+
+// 切换标注
+function toggleLabels() {
+showLabels = !showLabels;
+labelsContainer.innerHTML = '';
+document.getElementById('labelBtn').textContent = showLabels ? '隐藏水循环环节标注' : '显示水循环环节标注';
+if(showLabels && currentStep >= 2) {
+renderLabels();
+}
+}
+
+// 渲染标注
+function renderLabels() {
+labelsContainer.innerHTML = `
+<div class="label-tag" style="left: 470px; top: 200px;">蒸发（液态→气态）</div>
+<div class="label-tag" style="left: 350px; top: 150px;">水汽输送</div>
+<div class="label-tag" style="left: 260px; top: 190px;">凝结（气态→液态）</div>
+<div class="label-tag" style="left: 240px; top: 280px;">降水</div>
+`;
+}
+
+// 动画循环
+function animate() {
+frame++;
+updateParticles();
+draw();
+animId = requestAnimationFrame(animate);
+}
+
+// ==================== 核心修复：粒子更新逻辑 ====================
+function updateParticles() {
+// ---------- 火焰粒子 ----------
+if(isHeating) {
+const flameRate = [1, 2, 4][heatLevel-1];
+for(let i=0; i<flameRate; i++) {
+flameParticles.push({
+x: 475 + (Math.random()-0.5)*20,
+y: 410,
+vy: -1.2 - Math.random()*1.5,
+vx: (Math.random()-0.5)*0.6,
+life: 1,
+size: 4 + Math.random()*5
+});
+}
+}
+for(let i=flameParticles.length-1; i>=0; i--) {
+const p = flameParticles[i];
+p.x += p.vx;
+p.y += p.vy;
+p.life -= 0.025;
+p.size *= 0.97;
+if(p.life <= 0) flameParticles.splice(i, 1);
+}
+
+// ---------- 水蒸气粒子 ----------
+if(isHeating && currentStep >= 2) {
+// 修复1：加热越强，生成数量显著增加
+const spawnRate = [4, 8, 14][heatLevel-1];
+// 修复2：上升速度差异缩小，主要靠数量体现强度
+const baseRiseSpeed = [2.2, 2.6, 3.0][heatLevel-1];
+// 修复3：加热越强，粒子半径越大、透明度越高，视觉更浓密
+const baseRadius = [3, 4, 5][heatLevel-1];
+const baseAlpha = [0.5, 0.65, 0.8][heatLevel-1];
+
+for(let i=0; i<spawnRate; i++) {
+steamParticles.push({
+x: 480 + (Math.random()-0.5)*18,
+y: 260,
+vx: 0,
+vy: -(baseRiseSpeed + Math.random()*1.2),
+radius: baseRadius + Math.random()*3,
+alpha: baseAlpha + Math.random()*0.2,
+phase: Math.random()*100,
+life: 0
+});
+}
+}
+
+// 遍历蒸汽粒子
+for(let i=steamParticles.length-1; i>=0; i--) {
+const p = steamParticles[i];
+p.life++;
+const wobble = Math.sin(frame*0.08 + p.phase) * 1.2;
+
+if(p.y > 180) {
+// ===== 上升阶段 =====
+p.y += p.vy;
+p.x += wobble * 0.3;
+// 上升过程中逐渐扩散变大
+p.radius += 0.02;
+p.alpha *= 0.998;
+} 
+else if(p.x > 280) {
+// ===== 水平输送阶段 =====
+// 修复4：水平速度固定，不随加热强度变化
+p.x -= 2.8;
+p.y = 180 + wobble * 0.4;
+p.vy = 0;
+// 水平输送中缓慢扩散
+p.radius += 0.01;
+p.alpha *= 0.999;
+} 
+else {
+// ===== 到达冷却区 =====
+p.y -= 0.4;
+p.x += wobble * 0.5;
+
+// 修复5：凝结速度只由冰块数量决定
+if(hasIce && currentStep >= 4) {
+const dripInterval = Math.max(8, 36 - iceCount * 7);
+const dripChance = 0.12 + iceCount * 0.06;
+
+if(p.life % dripInterval === 0 || (p.y < 172 && Math.random() < dripChance)) {
+const dripCount = Math.ceil(iceCount * 0.7);
+for(let j=0; j<dripCount; j++) {
+dripParticles.push({
+x: 190 + Math.random()*180,
+y: 176,
+vy: 2.5 + Math.random()*2,
+radius: 3 + Math.random()*3,
+targetY: 355
+});
+}
+// 产水量由加热强度（蒸发量）和冰块数量（凝结率）共同决定
+trayWater = Math.min(trayWater + 0.006 * heatLevel * (0.7 + iceCount * 0.15), 1);
+document.getElementById('waterLevel').textContent = Math.round(trayWater*100) + '%';
+document.getElementById('waterBar').style.width = (trayWater*100) + '%';
+
+steamParticles.splice(i, 1);
+continue;
+}
+}
+}
+
+// 自然消散（寿命终结）
+if(p.life > 260) {
+steamParticles.splice(i, 1);
+}
+}
+
+// ---------- 步骤4持续补充降水 ----------
+if(currentStep >= 4 && hasIce && isHeating && frame % 4 === 0) {
+const dripRate = Math.floor(heatLevel * 0.8) + Math.floor(iceCount / 2);
+for(let k=0; k<dripRate; k++) {
+dripParticles.push({
+x: 180 + Math.random()*200,
+y: 176,
+vy: 2.5 + Math.random()*2,
+radius: 3 + Math.random()*3,
+targetY: 355
+});
+}
+trayWater = Math.min(trayWater + 0.002 * dripRate, 1);
+document.getElementById('waterLevel').textContent = Math.round(trayWater*100) + '%';
+document.getElementById('waterBar').style.width = (trayWater*100) + '%';
+}
+
+// ---------- 水滴下落 ----------
+for(let i=dripParticles.length-1; i>=0; i--) {
+const d = dripParticles[i];
+d.y += d.vy;
+d.vy += 0.2;
+if(d.y >= d.targetY) {
+dripParticles.splice(i, 1);
+}
+}
+
+// 修复6：大幅提高粒子上限，避免蒸汽柱被截断
+if(steamParticles.length > 800) steamParticles.splice(0, steamParticles.length - 800);
+if(dripParticles.length > 150) dripParticles.splice(0, dripParticles.length - 150);
+if(flameParticles.length > 120) flameParticles.splice(0, flameParticles.length - 120);
+}
+
+// 绘制
+function draw() {
+ctx.clearRect(0, 0, W, H);
+
+const bg = ctx.createLinearGradient(0, 0, 0, H);
+bg.addColorStop(0, '#d8eaf7');
+bg.addColorStop(1, '#eef5fb');
+ctx.fillStyle = bg;
+ctx.fillRect(0, 0, W, H);
+
+// 实验台
+ctx.fillStyle = '#6b5a48';
+ctx.shadowColor = 'rgba(0,0,0,0.2)';
+ctx.shadowBlur = 8;
+ctx.fillRect(80, 430, 640, 15);
+ctx.shadowBlur = 0;
+
+// 铁架台
+ctx.strokeStyle = '#5a6a78';
+ctx.lineWidth = 8;
+ctx.beginPath();
+ctx.moveTo(570, 430);
+ctx.lineTo(570, 170);
+ctx.stroke();
+ctx.lineWidth = 5;
+ctx.beginPath();
+ctx.moveTo(520, 220);
+ctx.lineTo(600, 220);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(520, 330);
+ctx.lineTo(600, 330);
+ctx.stroke();
+ctx.fillStyle = '#4a5a68';
+ctx.fillRect(525, 215, 15, 12);
+ctx.fillRect(525, 325, 15, 12);
+
+// 陶土网
+if(currentStep >= 1) {
+ctx.fillStyle = '#888888';
+ctx.fillRect(430, 315, 90, 5);
+ctx.strokeStyle = '#666666';
+ctx.lineWidth = 1;
+for(let i=0; i<8; i++) {
+ctx.beginPath();
+ctx.moveTo(430+i*12, 315);
+ctx.lineTo(430+i*12, 320);
+ctx.stroke();
+}
+}
+
+// 烧瓶和水
+if(currentStep >= 1) {
+ctx.fillStyle = 'rgba(200, 230, 245, 0.6)';
+ctx.strokeStyle = '#7baac2';
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.arc(config.flask.x, config.flask.y, config.flask.radius, 0, Math.PI*2);
+ctx.fill();
+ctx.stroke();
+
+ctx.fillStyle = 'rgba(90, 174, 214, 0.7)';
+ctx.beginPath();
+ctx.arc(config.flask.x, config.flask.y, config.flask.radius-7, 0, Math.PI, true);
+ctx.fill();
+
+if(isHeating) {
+ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+ctx.lineWidth = 2;
+ctx.beginPath();
+for(let x=config.flask.x - config.flask.radius + 7; x < config.flask.x + config.flask.radius - 7; x+=3) {
+const y = config.flask.y + Math.sin(frame*0.1 + x*0.1)*2;
+if(x === config.flask.x - config.flask.radius + 7) ctx.moveTo(x, y);
+else ctx.lineTo(x, y);
+}
+ctx.stroke();
+
+// 水中气泡
+const bubbleCount = [2, 4, 7][heatLevel-1];
+for(let i=0; i<bubbleCount; i++) {
+const bx = config.flask.x + (Math.sin(frame*0.05 + i*2)*30);
+const by = config.flask.y + 20 - ((frame * (0.8 + heatLevel*0.3)) % 40);
+ctx.beginPath();
+ctx.arc(bx, by, 1.5 + Math.random()*1.5, 0, Math.PI*2);
+ctx.fillStyle = 'rgba(255,255,255,0.7)';
+ctx.fill();
+}
+}
+
+ctx.fillStyle = 'rgba(200, 230, 245, 0.6)';
+ctx.strokeStyle = '#7baac2';
+ctx.lineWidth = 3;
+ctx.fillRect(470, 240, 20, 30);
+ctx.strokeRect(470, 240, 20, 30);
+ctx.fillStyle = '#8a6a58';
+ctx.fillRect(467, 230, 26, 15);
+}
+
+// 玻璃导管
+if(currentStep >= 1) {
+ctx.strokeStyle = 'rgba(180, 210, 230, 0.8)';
+ctx.lineWidth = 8;
+ctx.lineCap = 'round';
+ctx.beginPath();
+ctx.moveTo(480, 245);
+ctx.lineTo(480, 180);
+ctx.lineTo(300, 180);
+ctx.lineTo(300, 185);
+ctx.stroke();
+ctx.strokeStyle = 'rgba(120, 170, 195, 0.6)';
+ctx.lineWidth = 2;
+ctx.stroke();
+}
+
+// 酒精灯
+if(currentStep >= 2) {
+ctx.fillStyle = '#c4b8a8';
+ctx.beginPath();
+ctx.ellipse(475, 420, 25, 10, 0, 0, Math.PI*2);
+ctx.fill();
+ctx.fillRect(455, 390, 40, 30);
+ctx.fillStyle = '#b0a090';
+ctx.fillRect(465, 380, 20, 12);
+ctx.fillStyle = '#333';
+ctx.fillRect(472, 375, 6, 8);
+
+if(isHeating) {
+for(let i=0; i<flameParticles.length; i++) {
+const p = flameParticles[i];
+ctx.fillStyle = `rgba(255, ${100 + p.life*100}, 0, ${p.life*0.8})`;
+ctx.beginPath();
+ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+ctx.fill();
+}
+ctx.fillStyle = 'rgba(255, 160, 50, 0.6)';
+ctx.beginPath();
+ctx.moveTo(475, 370);
+ctx.quadraticCurveTo(460, 390, 470, 400);
+ctx.quadraticCurveTo(475, 395, 480, 400);
+ctx.quadraticCurveTo(490, 390, 475, 370);
+ctx.fill();
+}
+}
+
+// 支架和玻璃板
+if(currentStep >= 1) {
+ctx.fillStyle = '#8b6f47';
+ctx.fillRect(130, 175, 12, 210);
+ctx.fillRect(240, 175, 12, 210);
+ctx.fillRect(350, 175, 12, 210);
+ctx.fillRect(420, 175, 12, 210);
+
+ctx.fillStyle = 'rgba(220, 240, 250, 0.5)';
+ctx.strokeStyle = '#91bdd6';
+ctx.lineWidth = 2;
+ctx.fillRect(120, 160, 320, 15);
+ctx.strokeRect(120, 160, 320, 15);
+ctx.fillStyle = 'rgba(255,255,255,0.3)';
+ctx.fillRect(140, 162, 80, 3);
+}
+
+// 冰块
+if(hasIce && currentStep >= 3) {
+config.iceCubes.forEach(ice => {
+ctx.fillStyle = 'rgba(200, 235, 250, 0.8)';
+ctx.strokeStyle = '#7cc0e0';
+ctx.lineWidth = 2;
+ctx.fillRect(ice.x - ice.size/2, ice.y - ice.size/2, ice.size, ice.size);
+ctx.strokeRect(ice.x - ice.size/2, ice.y - ice.size/2, ice.size, ice.size);
+ctx.fillStyle = 'rgba(255,255,255,0.6)';
+ctx.fillRect(ice.x - ice.size/2 + 3, ice.y - ice.size/2 + 3, 6, 6);
+if(Math.random() < 0.02) {
+ctx.beginPath();
+ctx.arc(ice.x + (Math.random()-0.5)*15, 175, 2, 0, Math.PI*2);
+ctx.fillStyle = 'rgba(120, 180, 220, 0.8)';
+ctx.fill();
+}
+});
+}
+
+// 托盘
+if(currentStep >= 1) {
+ctx.fillStyle = '#a0b0bc';
+ctx.strokeStyle = '#708490';
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.moveTo(120, 350);
+ctx.lineTo(400, 350);
+ctx.lineTo(390, 390);
+ctx.lineTo(130, 390);
+ctx.closePath();
+ctx.fill();
+ctx.stroke();
+
+if(trayWater > 0) {
+ctx.fillStyle = 'rgba(90, 174, 214, 0.6)';
+const waterHeight = 5 + trayWater * 25;
+ctx.beginPath();
+ctx.moveTo(132, 390 - waterHeight);
+ctx.lineTo(388, 390 - waterHeight);
+ctx.lineTo(390, 388);
+ctx.lineTo(130, 388);
+ctx.closePath();
+ctx.fill();
+}
+}
+
+// 水蒸气粒子（先绘制下层淡的，再绘制上层浓的，营造层次感）
+steamParticles.forEach(p => {
+ctx.fillStyle = `rgba(210, 235, 248, ${p.alpha * 0.6})`;
+ctx.beginPath();
+ctx.arc(p.x, p.y, p.radius * 1.3, 0, Math.PI*2);
+ctx.fill();
+});
+steamParticles.forEach(p => {
+ctx.fillStyle = `rgba(230, 242, 250, ${p.alpha})`;
+ctx.beginPath();
+ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+ctx.fill();
+});
+
+// 水滴粒子
+dripParticles.forEach(d => {
+ctx.fillStyle = 'rgba(70, 140, 190, 0.8)';
+ctx.beginPath();
+ctx.ellipse(d.x, d.y, d.radius, d.radius*1.6, 0, 0, Math.PI*2);
+ctx.fill();
+});
+
+// 玻璃板下方凝结水滴效果
+if(hasIce && currentStep >= 4 && dripParticles.length > 0) {
+ctx.fillStyle = 'rgba(120, 180, 220, 0.7)';
+for(let i=0; i<iceCount*2; i++) {
+const dx = 160 + i*60 + Math.sin(frame*0.02+i)*5;
+ctx.beginPath();
+ctx.arc(dx, 178 + Math.sin(frame*0.05+i)*2, 3 + Math.sin(frame*0.03+i)*1, 0, Math.PI*2);
+ctx.fill();
+}
+}
+
+// 步骤提示文字
+if(currentStep === 1 && !isHeating) {
+ctx.fillStyle = 'rgba(44, 95, 122, 0.6)';
+ctx.font = '16px "Microsoft YaHei"';
+ctx.textAlign = 'center';
+ctx.fillText('点击「步骤2」点燃酒精灯开始加热', 400, 250);
+}
+if(currentStep === 3 && hasIce && !(currentStep >= 4)) {
+ctx.fillStyle = 'rgba(44, 95, 122, 0.6)';
+ctx.font = '16px "Microsoft YaHei"';
+ctx.textAlign = 'center';
+ctx.fillText('点击「步骤4」观察水滴形成与降落', 400, 250);
+}
+}
+
+// 初始化
+function init() {
+updateIcePositions();
+bindEvents();
+reset();
+}
+init();
+})();
+</script>
+</body>
+</html>
